@@ -11,7 +11,7 @@ import openai as openai
 
 #function to generate story outline
 def generate_story_outline(elements):
-    openai.api_key = st.secrets["openai_api_key"]
+    openai.api_key = st.secrets["openai"]["openai_api_key"]
 prompt_step1 = """
 Genre: {genre}
 Setting: {setting}
@@ -31,10 +31,33 @@ Please ensure that the outline is engaging and captures the essence of each stor
 Keep in mind the finished product should only have up to 3 sentences on each page, with only 5 pages being utilized for narrative, so the outline should be much shorter in comparison.
 
 """
+#Function to analyze the uploaded image and provide a detailed description
+def generate_image_analysis_prompt(image_data):
+    prompt = (
+        "Analyze the following image and provide a detailed description including aspects such as appearance, clothing, background, facial expressions, "
+        "and any other notable features. Describe the person, their age, gender, ethnicity, hair style and color, eye color, and any accessories they might be wearing. "
+        "Also, provide details about the surroundings, including any visible objects or scenery.\n\n"
+        f"Image data: {image_data}"
+    )
+    return prompt
+
+def get_image_description(prompt):
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=500
+    )
+    return response.choices[0].text.strip()
+
+
+
 
 prompt_step2 = """
+image: {image}
+Genre: {genre}
+Style: {style}
 Based on the above elements, create the following:
-
+1. Analyze the image uploaded and describe all the qualities about the person depicted. make sure to describe in as best detail as possible the following: Face, body, clothing, 
 2. Create a description of the main character based on the uploaded image and the relation to the recipient.
 
 

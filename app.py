@@ -5,6 +5,8 @@ from PIL import Image
 import base64
 from streamlit_extras.stylable_container import stylable_container
 
+# Access OpenAI API key from secrets
+# openai.api_key = st.secrets["openai"]["openai_api_key"]
 
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as image_file:
@@ -89,6 +91,9 @@ def simple_container():
                 st.session_state.locked_magical_object = None
             if 'locked_tone' not in st.session_state:
                 st.session_state.locked_tone = None
+            if 'locked_style' not in st.session_state:
+                st.session_state.locked_style = None
+
             if 'selected_genres' not in st.session_state:
                 st.session_state.selected_genres = select_random_elements(genres)
             if 'selected_settings' not in st.session_state:
@@ -103,10 +108,20 @@ def simple_container():
                 st.session_state.selected_magical_objects = select_random_elements(magical_objects_list)
             if 'selected_tones' not in st.session_state:
                 st.session_state.selected_tones = select_random_elements(tone_list)
-            if 'selected_style' not in st.session_state:
-                st.session_state.selected_style = select_random_elements(style_list)
+            if 'selected_styles' not in st.session_state:
+                st.session_state.selected_styles = style_list
 
         initialize_session_state()
+
+        if st.button("Generate New Lists"):
+            st.session_state.selected_genres = select_random_elements(genres)
+            st.session_state.selected_settings = select_random_elements(settings)
+            st.session_state.selected_supporting_characters = select_random_elements(supporting_characters_list)
+            st.session_state.selected_plot_elements = select_random_elements(plot_elements_list)
+            st.session_state.selected_themes = select_random_elements(themes_list)
+            st.session_state.selected_magical_objects = select_random_elements(magical_objects_list)
+            st.session_state.selected_tones = select_random_elements(tone_list)
+            st.session_state.selected_styles = style_list
 
         def create_story_form():
             with st.expander("Choose Story Elements"):
@@ -160,7 +175,7 @@ def simple_container():
                     st.write(f"**Tone/Mood:** {st.session_state.locked_tone}")
                 
                 if not st.session_state.locked_style:
-                    st.session_state.selected_style = st.selectbox("Choose the illustration Style:", options=st.session_state.selected_style, key='style_select')
+                    st.session_state.selected_style = st.selectbox("Choose the illustration Style:", options=st.session_state.selected_styles, key='style_select')
                     if st.button("Lock Style"):
                         st.session_state.locked_style = st.session_state.selected_style
                 else:
@@ -168,23 +183,40 @@ def simple_container():
 
         create_story_form()
 
-        if st.button("Generate New Lists"):
-            st.session_state.selected_genres = select_random_elements(genres)
-            st.session_state.selected_settings = select_random_elements(settings)
-            st.session_state.selected_supporting_characters = select_random_elements(supporting_characters_list)
-            st.session_state.selected_plot_elements = select_random_elements(plot_elements_list)
-            st.session_state.selected_themes = select_random_elements(themes_list)
-            st.session_state.selected_magical_objects = select_random_elements(magical_objects_list)
-            st.session_state.selected_tones = select_random_elements(tone_list)
+        
 
-        if st.button("Generate Story Outline"):
-            elements = {
-                "theme": st.session_state.locked_theme,
-                "environment": st.session_state.locked_setting,
-                "main_character": name_of_recipient,
-                "supporting_characters": st.session_state.locked_supporting_character,
-                "plot_elements": st.session_state.locked_plot_element,
-                "tone": st.session_state.locked_tone,
-                "style": st.session_state.locked_style
-            }
+#         if st.button("Generate Story Outline"):
+#             elements = {
+#                 "theme": st.session_state.locked_theme,
+#                 "environment": st.session_state.locked_setting,
+#                 "main_character": name_of_recipient,
+#                 "supporting_characters": st.session_state.locked_supporting_character,
+#                 "plot_elements": st.session_state.locked_plot_element,
+#                 "tone": st.session_state.locked_tone,
+#             }
+#             outline = generate_story_outline(elements)
+#             st.header("Generated Story Outline")
+#             st.write(outline)
+
+# # Function to generate story outline using OpenAI API
+# def generate_story_outline(elements):
+#     prompt = (
+#         f"Create a story with the following elements:\n"
+#         f"Theme: {elements['theme']}\n"
+#         f"Environment: {elements['environment']}\n"
+#         f"Main Character: {elements['main_character']}\n"
+#         f"Supporting Characters: {elements['supporting_characters']}\n"
+#         f"Plot Elements: {elements['plot_elements']}\n"
+#         f"Tone/Mood: {elements['tone']}\n\n"
+#         "Story Outline:"
+#     )
+
+#     response = openai.Completion.create(
+#         engine="text-davinci-003",
+#         prompt=prompt,
+#         max_tokens=500
+#     )
+
+#     return response.choices[0].text.strip()
+
 simple_container()

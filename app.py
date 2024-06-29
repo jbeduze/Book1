@@ -123,6 +123,8 @@ def simple_container():
         
         if uploaded_img is not None:
             st.session_state.uploaded_image_file = uploaded_img
+            uploaded_image_type = uploaded_img.type
+            st.session_state.uploaded_image_type = uploaded_image_type
             image = Image.open(uploaded_img)
             st.session_state.uploaded_image = image
             st.image(image, caption='Uploaded Image.', use_column_width=True)
@@ -152,11 +154,14 @@ def simple_container():
 
         create_story_form()
         getoutline_button = st.button(label="Generate Story Outline")
-        placeholder = st.empty()
+        outline_placeholder = st.empty()
+        description_placeholder = st.empty()
         if getoutline_button:
             prompt1 = prompt1_template.format(genre=st.session_state.locked_genre, setting=st.session_state.locked_setting, supporting_character=st.session_state.locked_supporting_character, plot_element=st.session_state.locked_plot_element, theme=st.session_state.locked_theme, magical_object=st.session_state.locked_magical_object, tone=st.session_state.locked_tone, style=st.session_state.locked_style, recipient_name=st.session_state.recipient_name, relation=st.session_state.relation, main_character_description=st.session_state.main_character_description)
             outline = aiworking.generate_story_outline(prompt1)
-            with placeholder.container():
+            description = aiworking.generate_character_description()
+            with outline_placeholder.container():
+                st.markdown("**OUTLINE**")
                 cols = st.columns(5)
                 counter = 0
                 for key, value in outline.items():
@@ -165,6 +170,11 @@ def simple_container():
                             with st.popover(label=key, use_container_width=True):
                                 st.markdown(value)
                     counter = counter + 1
+            with description_placeholder.container():
+                st.markdown("**CHARACTER DESCRIPTION**")
+                st.divider()
+                st.markdown(description['character_description'])
+            
                     
 
 

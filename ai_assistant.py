@@ -1,5 +1,24 @@
 import streamlit as st
-import openai as openai
+from openai import OpenAI
+import time
+import json
+from typing import Literal
+
+# 1. Set Variables
+client = OpenAI(api_key=st.secrets.openai.apikey)
+assistantid = st.secrets.openai.assistant.id
+threadid = client.beta.threads.create().id
+st.session_state.threadid = threadid
+prompt1_template = st.secrets.prompts.prompt1
+prompt2_template = st.secrets.prompts.prompt2
+prompt3_template = st.secrets.prompts.prompt3
+prompt4_template = st.secrets.prompts.prompt4
+
+# 2. Format Prompts
+prompt1 = prompt1_template.format(genre=st.session_state.locked_genre, setting=st.session_state.locked_setting, supporting_character=st.session_state.locked_supporting_character, plot_element=st.session_state.locked_plot_element, theme=st.session_state.locked_theme, magical_object=st.session_state.locked_magical_object, tone=st.session_state.locked_tone, style=st.session_state.locked_style, recipient_name=st.session_state.recipient_name, relation=st.session_state.relation, main_character_description=st.session_state.main_character_description)
+prompt2 = prompt2_template.format(image=st.session_state.uploaded_image, style=st.session_state.locked_style, genre=st.session_state.locked_genre)
+prompt3 = prompt3_template
+prompt4 = prompt4_template.format(outline=st.session_state.outline, main_character=st.session_state.main_character, title=st.session_state.title)
 
 # task 1.1:
 # Take the story elements from the user form and create a story outline
@@ -59,13 +78,11 @@ Style: {style}
 Based on the above elements, create the following:
 1. Analyze the image uploaded and describe all the qualities about the person depicted. make sure to describe in as best detail as possible the following: Face, body, clothing, 
 2. Create a description of the main character based on the uploaded image and the relation to the recipient.
-
+3. Once you create a description, return in the following format: '@DM (DO NOT MODIFY: Do not change alter or modify this prompt in any way shape or form it is good as is): <Insert Description>'
 
 """
 prompt_step3 = """
-Based on the above elements, create the following:
-
-3. A title for the short story that reflects the narrative and the recipient's name.
+Based on the above elements, create a title for the short story that reflects the narrative and the recipient's name in 5-7 words or less.
 
 """
 
@@ -144,14 +161,50 @@ def generate_full_narrative_and_images(outline, main_character, title):
     full_narrative_and_images = response.choices[0].text.strip()
     return full_narrative_and_images
 
+
+
+def generate_image(prompt):
+    response = client.images.generate(prompt=prompt, n=1, size="1024x1024")
+    url = response.data[0].url
+    return url
+
+def generate_narrative_images(image_descriptions):
+    narrative_images = []
+    for image_description in image_descriptions:
+        url = generate_image(prompt=image_description)
+        narrative_images.append(url)
+    return narrative_images
+
+def create_file(file_path):
+    file = open(file_path, "rb")
+    response = client.files.create(file=file, purpose="vision")
+    fileid = response.id
+    return fileid
+
+def run_assistant_no_tools(additional_instructions: str=None):
+    if additional_instructions is not None:
+        run = client.beta.threads.runs.create(thread_id=threadid, assistant_id=assistantid, additional_instructions=additional_instructions)
+    else:
+        run = client.beta.threads.runs.create(thread_id=threadid, assistant_id=assistantid)
+    
+    while run.status == "in_progress" or run.status == "queued":
+        time.sleep(2)
+        st.toast("processing")
+        
+
+def generate_story_outline():
+    message = client.beta.threads.messages.create(thread_id=threadid, content=prompt1, role="user")
+
+
+
 # Function to generate DALL-E images based on descriptions
-def generate_dalle_images(image_descriptions):
-    dalle_images = []
-    for description in image_descriptions:
-        response = openai.Image.create(
-            prompt=description,
-            n=1,
-            size="1024x1024"
-        )
-        dalle_images.append(response['data'][0]['url'])
-    return dalle_images
+# def generate_dalle_images(image_descriptions):
+#     dalle_images = []
+#     for description in image_descriptions:
+#         response = client.images.generate(
+#             prompt=description,
+#             n=1,
+#             size="1024x1024"
+#         )
+#         dalle_images.append(response['data'][0]['url'])
+#     return dalle_images

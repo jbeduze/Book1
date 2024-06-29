@@ -1,12 +1,43 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import random
 from PIL import Image
 import base64
 from streamlit_extras.stylable_container import stylable_container
+from clsSessionState import SessionState
 
 # Access OpenAI API key from secrets
 # openai.api_key = st.secrets["openai"]["openai_api_key"]
+
+# 1. Set Session State
+ss = SessionState.get()
+
+# 2. Set Variables - Lists
+genres = st.secrets["genres"]["options"]
+settings = st.secrets["settings"]["options"]
+supporting_characters_list = st.secrets["supporting_characters"]["options"]
+plot_elements_list = st.secrets["plot_elements"]["options"]
+themes_list = st.secrets["themes"]["options"]
+magical_objects_list = st.secrets["magical_objects"]["options"]
+tone_list = st.secrets["tone"]["options"]
+style_list = st.secrets["styles"]["options"]
+
+# 3. Set Variables - OpenAI
+client = OpenAI(api_key=st.secrets.openai.apikey)
+
+
+# 4. Set Functions - Callbacks
+def lock_variable(key, value):
+    st.session_state[key] = value
+
+# 5. Set Functions - Other
+
+def select_random_elements(options, count=10):
+    elements = random.sample(options, min(count, len(options)))
+    if "surprise me" not in elements:
+        elements.append("surprise me")
+    return elements
+
 
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as image_file:
@@ -25,6 +56,48 @@ def add_bg_from_local(image_file):
 
 add_bg_from_local('Bookshelf.png')
 
+def create_story_form():
+    with st.expander("Choose Story Elements"):
+        genre_select = st.selectbox("Choose the Genre:", options=st.session_state.selected_genres, key='genre_select')
+        selected_genre = st.button("Lock Genre", on_click=lock_variable, args=('locked_genre', genre_select))
+        if st.session_state.locked_genre:
+            st.write(f"**Genre:** {st.session_state.locked_genre}")
+
+        setting_select = st.selectbox("Choose the Setting:", options=st.session_state.selected_settings, key='setting_select')
+        selected_setting = st.button("Lock Setting", on_click=lock_variable, args=('locked_setting', setting_select))
+        if st.session_state.locked_setting:
+            st.write(f"**Setting:** {st.session_state.locked_setting}")
+
+        supporting_character_select = st.selectbox("Choose Supporting Character(s):", options=st.session_state.selected_supporting_characters, key='supporting_character_select')
+        selected_supporting_character = st.button("Lock Supporting Character", on_click=lock_variable, args=('locked_supporting_character', supporting_character_select))
+        if st.session_state.locked_supporting_character:
+            st.write(f"**Supporting Character:** {st.session_state.locked_supporting_character}")
+
+        plot_element_select = st.selectbox("Choose Plot Elements:", options=st.session_state.selected_plot_elements, key='plot_element_select')
+        selected_plot_element = st.button("Lock Plot Element", on_click=lock_variable, args=('locked_plot_element', plot_element_select))
+        if st.session_state.locked_plot_element:
+            st.write(f"**Plot Element:** {st.session_state.locked_plot_element}")
+
+        theme_select = st.selectbox("Choose the Theme:", options=st.session_state.selected_themes, key='theme_select')
+        selected_theme = st.button("Lock Theme", on_click=lock_variable, args=('locked_theme', theme_select))
+        if st.session_state.locked_theme:
+            st.write(f"**Theme:** {st.session_state.locked_theme}")
+
+        magical_object_select = st.selectbox("Choose Magical Objects:", options=st.session_state.selected_magical_objects, key='magical_object_select')
+        selected_magicobject = st.button("Lock Magical Object", on_click=lock_variable, args=('locked_magical_object', magical_object_select))
+        if st.session_state.locked_magical_object:
+            st.write(f"**Magical Object:** {st.session_state.locked_magical_object}")
+
+        tone_select = st.selectbox("Choose the Tone/Mood:", options=st.session_state.selected_tones, key='tone_select')
+        selected_tone = st.button("Lock Tone", on_click=lock_variable, args=('locked_tone', tone_select))
+        if st.session_state.locked_tone:
+            st.write(f"**Tone/Mood:** {st.session_state.locked_tone}")
+
+        style_select = st.selectbox("Choose the illustration Style:", options=st.session_state.selected_styles, key='style_select')
+        selected_style = st.button("Lock Style", on_click=lock_variable, args=('locked_style', style_select))
+        if st.session_state.locked_style:
+            st.write(f"**Style:** {st.session_state.locked_style}")
+            
 def simple_container():
     with stylable_container(
         key="Simple_Container",
@@ -47,7 +120,9 @@ def simple_container():
         uploaded_img = st.file_uploader("Upload a picture of the person/pet you'd like as the main Character of the story", type=['png', 'jpg', 'jpeg', 'gif'])
         
         if uploaded_img is not None:
+            st.session_state.uploaded_image_file = uploaded_img
             image = Image.open(uploaded_img)
+            st.session_state.uploaded_image = image
             st.image(image, caption='Uploaded Image.', use_column_width=True)
             st.write("Please verify that this is the correct image. If not, please delete and upload a new image")
         else:
@@ -55,63 +130,13 @@ def simple_container():
 
         relation = st.text_input("Relation to the recipient")
         if relation:
+            st.session_state.relation = relation
             st.success(relation)
 
         name_of_recipient = st.text_input("Insert the name of the recipient here")
         if name_of_recipient:
+            st.session_state.recipient_name = name_of_recipient
             st.success(name_of_recipient)
-
-        def select_random_elements(options, count=10):
-            elements = random.sample(options, min(count, len(options)))
-            if "surprise me" not in elements:
-                elements.append("surprise me")
-            return elements
-
-        genres = st.secrets["genres"]["options"]
-        settings = st.secrets["settings"]["options"]
-        supporting_characters_list = st.secrets["supporting_characters"]["options"]
-        plot_elements_list = st.secrets["plot_elements"]["options"]
-        themes_list = st.secrets["themes"]["options"]
-        magical_objects_list = st.secrets["magical_objects"]["options"]
-        tone_list = st.secrets["tone"]["options"]
-        style_list = st.secrets["styles"]["options"]
-
-        def initialize_session_state():
-            if 'locked_genre' not in st.session_state:
-                st.session_state.locked_genre = None
-            if 'locked_setting' not in st.session_state:
-                st.session_state.locked_setting = None
-            if 'locked_supporting_character' not in st.session_state:
-                st.session_state.locked_supporting_character = None
-            if 'locked_plot_element' not in st.session_state:
-                st.session_state.locked_plot_element = None
-            if 'locked_theme' not in st.session_state:
-                st.session_state.locked_theme = None
-            if 'locked_magical_object' not in st.session_state:
-                st.session_state.locked_magical_object = None
-            if 'locked_tone' not in st.session_state:
-                st.session_state.locked_tone = None
-            if 'locked_style' not in st.session_state:
-                st.session_state.locked_style = None
-
-            if 'selected_genres' not in st.session_state:
-                st.session_state.selected_genres = select_random_elements(genres)
-            if 'selected_settings' not in st.session_state:
-                st.session_state.selected_settings = select_random_elements(settings)
-            if 'selected_supporting_characters' not in st.session_state:
-                st.session_state.selected_supporting_characters = select_random_elements(supporting_characters_list)
-            if 'selected_plot_elements' not in st.session_state:
-                st.session_state.selected_plot_elements = select_random_elements(plot_elements_list)
-            if 'selected_themes' not in st.session_state:
-                st.session_state.selected_themes = select_random_elements(themes_list)
-            if 'selected_magical_objects' not in st.session_state:
-                st.session_state.selected_magical_objects = select_random_elements(magical_objects_list)
-            if 'selected_tones' not in st.session_state:
-                st.session_state.selected_tones = select_random_elements(tone_list)
-            if 'selected_styles' not in st.session_state:
-                st.session_state.selected_styles = style_list
-
-        initialize_session_state()
 
         if st.button("Generate New Lists"):
             st.session_state.selected_genres = select_random_elements(genres)
@@ -123,67 +148,12 @@ def simple_container():
             st.session_state.selected_tones = select_random_elements(tone_list)
             st.session_state.selected_styles = style_list
 
-        def create_story_form():
-            with st.expander("Choose Story Elements"):
-                if not st.session_state.locked_genre:
-                    st.session_state.selected_genre = st.selectbox("Choose the Genre:", options=st.session_state.selected_genres, key='genre_select')
-                    if st.button("Lock Genre"):
-                        st.session_state.locked_genre = st.session_state.selected_genre
-                else:
-                    st.write(f"**Genre:** {st.session_state.locked_genre}")
-
-                if not st.session_state.locked_setting:
-                    st.session_state.selected_setting = st.selectbox("Choose the Setting:", options=st.session_state.selected_settings, key='setting_select')
-                    if st.button("Lock Setting"):
-                        st.session_state.locked_setting = st.session_state.selected_setting
-                else:
-                    st.write(f"**Setting:** {st.session_state.locked_setting}")
-
-                if not st.session_state.locked_supporting_character:
-                    st.session_state.selected_supporting_character = st.selectbox("Choose Supporting Character(s):", options=st.session_state.selected_supporting_characters, key='supporting_character_select')
-                    if st.button("Lock Supporting Character"):
-                        st.session_state.locked_supporting_character = st.session_state.selected_supporting_character
-                else:
-                    st.write(f"**Supporting Character:** {st.session_state.locked_supporting_character}")
-
-                if not st.session_state.locked_plot_element:
-                    st.session_state.selected_plot_element = st.selectbox("Choose Plot Elements:", options=st.session_state.selected_plot_elements, key='plot_element_select')
-                    if st.button("Lock Plot Element"):
-                        st.session_state.locked_plot_element = st.session_state.selected_plot_element
-                else:
-                    st.write(f"**Plot Element:** {st.session_state.locked_plot_element}")
-
-                if not st.session_state.locked_theme:
-                    st.session_state.selected_theme = st.selectbox("Choose the Theme:", options=st.session_state.selected_themes, key='theme_select')
-                    if st.button("Lock Theme"):
-                        st.session_state.locked_theme = st.session_state.selected_theme
-                else:
-                    st.write(f"**Theme:** {st.session_state.locked_theme}")
-
-                if not st.session_state.locked_magical_object:
-                    st.session_state.selected_magical_object = st.selectbox("Choose Magical Objects:", options=st.session_state.selected_magical_objects, key='magical_object_select')
-                    if st.button("Lock Magical Object"):
-                        st.session_state.locked_magical_object = st.session_state.selected_magical_object
-                else:
-                    st.write(f"**Magical Object:** {st.session_state.locked_magical_object}")
-
-                if not st.session_state.locked_tone:
-                    st.session_state.selected_tone = st.selectbox("Choose the Tone/Mood:", options=st.session_state.selected_tones, key='tone_select')
-                    if st.button("Lock Tone"):
-                        st.session_state.locked_tone = st.session_state.selected_tone
-                else:
-                    st.write(f"**Tone/Mood:** {st.session_state.locked_tone}")
-                
-                if not st.session_state.locked_style:
-                    st.session_state.selected_style = st.selectbox("Choose the illustration Style:", options=st.session_state.selected_styles, key='style_select')
-                    if st.button("Lock Style"):
-                        st.session_state.locked_style = st.session_state.selected_style
-                else:
-                    st.write(f"**Style:** {st.session_state.locked_style}")
-
         create_story_form()
 
-        
+
+simple_container()
+
+
 
 #         if st.button("Generate Story Outline"):
 #             elements = {
@@ -218,5 +188,3 @@ def simple_container():
 #     )
 
 #     return response.choices[0].text.strip()
-
-simple_container()

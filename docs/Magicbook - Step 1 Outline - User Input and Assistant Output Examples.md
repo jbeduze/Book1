@@ -1,6 +1,7 @@
 # Magicbook - User / Assistant Examples
 
 ## Step 1: Story Outline
+- https://platform.openai.com/playground/chat?models=gpt-3.5-turbo&preset=preset-aWDH2AljIM1PIlCrkJtqhUh5
 
 ### Example 1: 
 

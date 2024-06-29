@@ -1,3 +1,5 @@
 streamlit
 openai
 streamlit-extras
+requests
+fpdf

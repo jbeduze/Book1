@@ -1,6 +1,18 @@
+import streamlit as st
+import openai as openai
 
-# Prompt templates
-prompt_template_step1 = """
+# task 1.1:
+# Take the story elements from the user form and create a story outline
+# task 1.2:
+# Take the uploaded image as well as the following elements (style, environment, theme, and tone) create a main character description in the environment that the story will take place in and take the other story elements into consideration
+# task 2.1:
+# Create a title for the story that includes the name of the main character and references the story outline
+
+
+#function to generate story outline
+def generate_story_outline(elements):
+    openai.api_key = st.secrets["openai_api_key"]
+prompt_step1 = """
 Genre: {genre}
 Setting: {setting}
 Supporting Character: {supporting_character}
@@ -8,20 +20,34 @@ Plot Element: {plot_element}
 Theme: {theme}
 Magical Object: {magical_object}
 Tone/Mood: {tone}
+Style: {style}
 Recipient's Name: {recipient_name}
 Relation to Recipient: {relation}
 Main Character Description: {main_character_description}
 
 Based on the above elements, create the following:
-   
-1. A detailed outline for a 5-page short story. Each page should have a brief narrative (no longer than 3 sentences).
-2. A description of the main character based on the uploaded image and the relation to the recipient.
-3. A title for the short story that reflects the narrative and the recipient's name.
-
+1. Create a general story outline, not to exceed 500 words, for a 5-page boardbook style kids short story. this outline should encorporate all of the story elements cohesively. 
 Please ensure that the outline is engaging and captures the essence of each story element.
+Keep in mind the finished product should only have up to 3 sentences on each page, with only 5 pages being utilized for narrative, so the outline should be much shorter in comparison.
+
 """
 
-prompt_template_step2 = """
+prompt_step2 = """
+Based on the above elements, create the following:
+
+2. Create a description of the main character based on the uploaded image and the relation to the recipient.
+
+
+"""
+prompt_step3 = """
+Based on the above elements, create the following:
+
+3. A title for the short story that reflects the narrative and the recipient's name.
+
+"""
+
+
+prompt_step4 = """
 Based on the following outline, create a full narrative for a 10-page book where 5 pages are the story and 5 pages are images. The story should have a brief narrative (no longer than 3 sentences) for each page.
 
 Outline:

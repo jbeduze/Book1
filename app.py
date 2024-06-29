@@ -10,6 +10,10 @@ import aiworking
 # Access OpenAI API key from secrets
 # openai.api_key = st.secrets["openai"]["openai_api_key"]
 
+#0. Set Page config
+st.set_page_config(page_icon=st.secrets.paths.icon, page_title="MagicBook", layout="wide", initial_sidebar_state="collapsed")
+#st.logo(image=open(st.secrets.paths.logo, "rb").read(), icon_image=open(st.secrets.paths.icon, "rb").read())
+
 # 1. Set Session State
 ss = SessionState.get()
 

@@ -1,0 +1,52 @@
+{
+    "story_outline": {
+      "point_1": {
+        "title": "Introduction",
+        "description": "Introduce the main characters, setting, and the initial situation.",
+        "details": {
+          "characters": "Insert main characters here",
+          "setting": "Insert setting details here",
+          "initial_situation": "Describe the initial situation here"
+        }
+      },
+      "point_2": {
+        "title": "Conflict Introduction",
+        "description": "Introduce the main conflict or problem that the characters need to solve.",
+        "details": {
+          "conflict": "Describe the main conflict here",
+          "antagonist": "Insert antagonist details here (if applicable)",
+          "challenges": "List initial challenges here"
+        }
+      },
+      "point_3": {
+        "title": "Rising Action",
+        "description": "Describe the events that lead up to the climax, including challenges and important developments.",
+        "details": {
+          "events": "Describe key events here",
+          "developments": "List important developments here",
+          "obstacles": "Describe obstacles faced by characters here"
+        }
+      },
+      "point_4": {
+        "title": "Climax",
+        "description": "Detail the most intense part of the story where the main conflict reaches its peak.",
+        "details": {
+          "turning_point": "Describe the climax here",
+          "resolution_attempts": "List attempts to resolve the conflict here"
+        }
+      },
+      "point_5": {
+        "title": "Resolution",
+        "description": "Explain how the conflict is resolved and what happens to the characters afterward.",
+        "details": {
+          "outcome": "Describe the outcome of the conflict here",
+          "character_fate": "Explain what happens to the characters here",
+          "lessons_learned": "List any lessons learned or themes concluded here"
+        },
+        "elements": {
+            
+        }
+      }
+    }
+  }
+  

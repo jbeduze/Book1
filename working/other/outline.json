@@ -1,0 +1,40 @@
+{
+    "plot_outline": {
+      "introduction": {
+        "alias": "Setup",
+        "description": "Introduce the main characters, setting, and the initial situation.",
+        "value": "",
+        "key_elements": [],
+        "example": "A young orphan, Harry, lives with his cruel aunt and uncle. He receives a mysterious letter inviting him to a school of magic."
+      },
+      "rising_action": {
+        "alias": "Conflict Introduction",
+        "description": "Present the central conflict or problem that the protagonist must face. Start building tension and develop the plot.",
+        "value": "",
+        "key_elements": [],
+        "example": "Harry learns he is a wizard and starts attending Hogwarts School of Witchcraft and Wizardry, where he discovers a dark force is threatening the school."
+      },
+      "climax": {
+        "alias": "Turning Point",
+        "description": "The most intense moment of the story, where the protagonist faces the main conflict head-on. This is the turning point that determines the outcome of the story.",
+        "value": "",
+        "key_elements": [],
+        "example": "Harry confronts Professor Quirrell and Voldemort in the forbidden corridor, risking his life to protect the Philosopher's Stone."
+      },
+      "falling_action": {
+        "alias": "Consequences",
+        "description": "Show the aftermath of the climax. The story starts to wind down, and loose ends begin to be tied up.",
+        "value": "",
+        "key_elements": [],
+        "example": "Harry survives the encounter, and the threat to the Philosopher's Stone is neutralized. The school returns to normalcy."
+      },
+      "conclusion": {
+        "alias": "Resolution",
+        "description": "Provide closure to the story. Resolve the main conflict and show how the protagonist has changed or grown.",
+        "value": "",
+        "key_elements": [],
+        "example": "Harry returns to his aunt and uncle's house for the summer, now confident in his identity as a wizard and looking forward to his next year at Hogwarts."
+      }
+    }
+  }
+  

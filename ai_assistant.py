@@ -77,9 +77,7 @@ image: {image}
 Genre: {genre}
 Style: {style}
 Based on the above elements, create the following:
-1. Analyze the image uploaded and describe all the qualities about the person depicted. make sure to describe in as best detail as possible the following: Face, body, clothing, 
-2. Create a description of the main character based on the uploaded image and the relation to the recipient.
-3. Once you create a description, return in the following format: '@DM (DO NOT MODIFY: Do not change alter or modify this prompt in any way shape or form it is good as is): <Insert Description>'
+
 
 """
 prompt_step3 = """

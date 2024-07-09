@@ -1,6 +1,6 @@
 import streamlit as st
 import random
-
+import json
 
 class SessionStateUtilities:
     @staticmethod
@@ -39,6 +39,9 @@ class SessionState:
         self.initial_state["selected_magical_objects"] = SessionStateUtilities.select_random_elements(self.magical_objects_list, 10)
         self.initial_state["selected_tones"] = SessionStateUtilities.select_random_elements(self.tone_list, 10)
         self.initial_state["selected_styles"] = self.style_list
+        self.initial_state["storybook"] = dict(st.secrets.storybook)
+        self.initial_state["mb"] = dict(st.secrets.mb)
+        self.initial_state["storyelements"] = dict(st.secrets.storyelements)
 
 
     def initialize(self):
@@ -61,11 +64,14 @@ class SessionState:
         # Retuns a single key value
         return st.session_state.get(key, None)
 
-    def set_file_content(self, key, filepath):
+    def set_file_content(self, key, filepath, is_json: bool=False):
         # Method that lets a file content be set to a variable
         try:
             with open(file=filepath, mode="r") as file:
-                content = file.read()
+                if not is_json:
+                    content = file.read()
+                else:
+                    content = json.load(file)
             st.session_state[key] = content
         except FileNotFoundError:
             st.session_state[key] = "File Not Found"

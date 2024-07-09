@@ -1,0 +1,67 @@
+{
+    "story_outline": {
+      "initial_input": {
+        "Genres": "Fantasy",
+        "Settings": "Castle",
+        "Supporting Characters": "Mentor",
+        "Plot Elements": "Quest",
+        "Themes": "Courage",
+        "Magical Objects": "Sword",
+        "Tone": "Mysterious",
+        "Styles": "Gothic",
+        "Name of Recipient": "Emily",
+        "Relation to Recipient": "Niece",
+        "Reading level": "Grade 4"
+      },
+      "plot_outline": {
+        "point_1": {
+          "title": "Introduction",
+          "description": "Introduce the main character, the setting, and the beginning of the adventure. Incorporate the magical object and the mentor.",
+          "details": {
+            "main_character": "Insert main character details here",
+            "setting": "Insert setting details here",
+            "beginning_adventure": "Describe the start of the adventure here",
+            "magical_object": "Insert magical object here",
+            "mentor": "Insert mentor details here"
+          }
+        },
+        "point_2": {
+          "title": "Rising Action",
+          "description": "Describe the journey and the challenges faced by the main character. Highlight the theme of courage and the guidance of the mentor.",
+          "details": {
+            "journey": "Describe the journey here",
+            "challenges": "List challenges faced here",
+            "theme": "Describe how courage is shown",
+            "mentor_guidance": "Describe how the mentor guides the main character"
+          }
+        },
+        "point_3": {
+          "title": "Climax",
+          "description": "Present the central conflict or battle in a mysterious and gothic setting. Emphasize the character's quest and the tone of the story.",
+          "details": {
+            "central_conflict": "Describe the central conflict or battle here",
+            "quest": "Detail the character's quest here"
+          }
+        },
+        "point_4": {
+          "title": "Falling Action",
+          "description": "Show the resolution of the conflict and how the main character's courage leads to victory. Include the magical object's role in the outcome.",
+          "details": {
+            "conflict_resolution": "Describe how the conflict is resolved",
+            "character_courage": "Explain how the character's courage leads to victory",
+            "magical_object_role": "Detail the role of the magical object in the outcome"
+          }
+        },
+        "point_5": {
+          "title": "Resolution",
+          "description": "Conclude the story with the transformation of the setting and the mentor's acknowledgment of the main character's growth. Maintain a sense of mystery and accomplishment.",
+          "details": {
+            "setting_transformation": "Describe the transformation of the setting",
+            "mentor_acknowledgment": "Explain how the mentor acknowledges the main character's growth",
+            "final_tone": "Maintain a sense of mystery and accomplishment"
+          }
+        }
+      }
+    }
+  }
+  

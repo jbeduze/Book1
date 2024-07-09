@@ -65,6 +65,16 @@ def generate_character_description():
     return contentjson
 
 
+
+
+###MASTER
+def generate_storybook():
+    prompt1_template = st.secrets.prompts.prompt1
+    prompt1 = prompt1_template.format(genre=st.session_state.locked_genre, setting=st.session_state.locked_setting, supporting_character=st.session_state.locked_supporting_character, plot_element=st.session_state.locked_plot_element, theme=st.session_state.locked_theme, magical_object=st.session_state.locked_magical_object, tone=st.session_state.locked_tone, style=st.session_state.locked_style, recipient_name=st.session_state.recipient_name, relation=st.session_state.relation, main_character_description=st.session_state.main_character_description)
+    outline = generate_story_outline(prompt1)
+    character_description = generate_character_description()
+
+
 #9. Tests
 # testprompt1 = """Genre: Robot Invasion 
 # Setting: High-Tech City

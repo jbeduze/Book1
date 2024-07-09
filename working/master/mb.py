@@ -80,7 +80,7 @@ def step3_characterimagedesc(story_elements, image_url):
     return characterimagedesc
 
 def step4_characterimage(characterimagedesc: str):
-    characterimageurl = generate_image(prompt=characterimagedesc, size="1024x1024", quality="standard", response_format1="url", style="natural")
+    characterimageurl = generate_image(prompt=characterimagedesc, size="1024x1024", quality="hd", response_format1="url", style="vivid")
     # print(characterimageurl)
     return characterimageurl
 

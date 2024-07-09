@@ -5,10 +5,8 @@ from PIL import Image
 import base64
 from streamlit_extras.stylable_container import stylable_container
 from clsSessionState import SessionState
-from clsStorybook import generate_story
-import asyncio
-from typing import Literal
-from io import BytesIO
+import aiworking
+from working.master.mb import master
 
 # Access OpenAI API key from secrets
 # openai.api_key = st.secrets["openai"]["openai_api_key"]
@@ -40,25 +38,6 @@ def lock_variable(key, value):
     st.session_state[key] = value
 
 # 5. Set Functions - Other
-def encode_image(image_input, type: Literal['path', 'bytes', 'pil']):
-    if type == "path":
-        with open(image_input, "rb") as image_file:
-            image_data = image_file.read()
-    elif type == "bytes":
-        image_data = image_input.getvalue()
-    elif type == "pil":
-        buffered = BytesIO()
-        image_input.save(buffered, format="PNG")
-        image_data = buffered.getvalue()
-    else:
-        raise ValueError("Invalid type. Must be 'path', 'bytes', or 'pil'.")
-    
-    encoded_image = base64.b64encode(image_data).decode('utf-8')
-    return encoded_image
-  
-def get_image_url(encoded_image, image_type: Literal['png', 'jpg', 'jpeg', 'gif']):
-    imageurl = f"data:image/{image_type};base64,{encoded_image}"
-    return imageurl
 
 def select_random_elements(options, count=10):
     elements = random.sample(options, min(count, len(options)))
@@ -160,10 +139,7 @@ def simple_container():
             st.session_state.uploaded_image = uploaded_img
             st.session_state.uploaded_image_type = uploaded_img.type
             st.session_state.uploaded_image_data = Image.open(uploaded_img)
-            st.session_state.uploaded_encoded_image = encode_image(image_input=st.session_state.uploaded_image_data, type="pil")
-            st.session_state.uploaded_image_url = get_image_url(encoded_image=st.session_state.uploaded_encoded_image, image_type=st.session_state.uploaded_image_type)
-            with st.popover(label="Uploaded Image", use_container_width=True):
-                st.image(st.session_state.uploaded_image_data, caption='Uploaded Image.', use_column_width=True)
+            st.image(st.session_state.uploaded_image_data, caption='Uploaded Image.', use_column_width=True)
             st.write("Please verify that this is the correct image. If not, please delete and upload a new image")
         else:
             st.warning("Please upload an image.")
@@ -190,45 +166,33 @@ def simple_container():
 
         create_story_form()
         getoutline_button = st.button(label="Generate Story Outline")
-        
+        outline_placeholder = st.empty()
+        titlesummary_placeholder = st.empty()
+        characterdesc_placeholder = st.empty()
+        characterimage_placeholder = st.empty()
 
         if getoutline_button:
-            output_container = st.container(border=False)
-            with output_container:
-                with st.spinner("Generating Story..."):
-                    asyncio.run(generate_story())
-                output_cols = st.columns(5)
-                with output_cols[0]:
-                    outline_placeholder = st.empty()
-                with output_cols[1]:
-                    titlesummary_placeholder = st.empty()
-                with output_cols[2]:
-                    characterdesc_placeholder = st.empty()
-                with output_cols[3]:
-                    characterimage_placeholder = st.empty()
-                with output_cols[4]:
-                    narrative_placeholder = st.empty()
-            
+            master()
 
             with outline_placeholder.container():
-                with st.popover(label="Story Outline", use_container_width=True):
-                    st.markdown(st.session_state.outline)
+                st.markdown("**OUTLINE**")
+                st.divider()
+                st.markdown(st.session_state.outline)
                 
             with titlesummary_placeholder.container():
-                with st.popover(label="Title and Summary", use_container_width=True):
-                    st.markdown(st.session_state.titlesummary)
+                st.markdown("**TITLE AND SUMMARY**")
+                st.divider()
+                st.markdown(st.session_state.titlesummary)
             
             with characterdesc_placeholder.container():
-                with st.popover(label="Character Description", use_container_width=True):
-                    st.markdown(st.session_state.characterdesc)
+                st.markdown("**CHARACTER DESCRIPTION**")
+                st.divider()
+                st.markdown(st.session_state.characterdesc)
                 
             with characterimage_placeholder.container():
-                with st.popover(label="Character Image", use_container_width=True):
-                    st.image(image=st.session_state.characterimageurl)
-            
-            with narrative_placeholder.container():
-                with st.popover(label="Narrative", use_container_width=True):
-                    st.markdown(st.session_state.narrative)
+                st.markdown("**CHARACTER IMAGE**")
+                st.divider()
+                st.image(image=st.session_state.characterimageurl)
                 
                     
 
